@@ -1,0 +1,42 @@
+[
+  {
+    "session_id": "d10b6d73-4676-4f8f-9c26-77867fdb310a",
+    "phases": []
+  },
+  {
+    "session_id": "2201b5f8-3a11-4745-8544-99f3158d6103",
+    "phases": [
+      {
+        "name": "session",
+        "command": null,
+        "status": "completed",
+        "timestamp_start": "2026-10-09T12:37:09.132673+00:00",
+        "timestamp_end": "2026-10-09T12:38:37.171968+00:00",
+        "agents": [
+          {
+            "name": "fields-detector",
+            "agent_id": "a1079312a7b8a126e",
+            "agent_type": "universal-assistant:analysis:fields-detector",
+            "status": "completed",
+            "timestamp_start": "2026-10-09T12:37:09.132687+00:00",
+            "timestamp_end": "2026-10-09T12:37:56.165230+00:00",
+            "tasks": []
+          },
+          {
+            "name": "features-detector",
+            "agent_id": "abf57509e89d8e882",
+            "agent_type": "universal-assistant:analysis:features-detector",
+            "status": "completed",
+            "timestamp_start": "2026-10-09T12:37:10.416558+00:00",
+            "timestamp_end": "2026-10-09T12:38:03.040155+00:00",
+            "tasks": []
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "session_id": "9accc97c-c3d9-47a3-a09f-92bc62dfbe89",
+    "phases": []
+  }
+]
