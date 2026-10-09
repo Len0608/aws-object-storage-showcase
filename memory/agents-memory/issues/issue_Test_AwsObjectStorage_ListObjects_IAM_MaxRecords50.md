@@ -3,16 +3,18 @@
 **Status**: ✗ Failed
 
 ### Expected:
-List objects in S3 bucket with UE_MAX_OUTPUT_RECORDS=50 environment variable, limiting output to 50 records.
+List of up to 50 objects returned from S3 bucket "ue-test-aws-object-storage-2026" (env var UE_MAX_OUTPUT_RECORDS=50).
 
 ### STDOUT:
 [empty]
 
 ### STDERR:
-S3 ClientError: code=InvalidAccessKeyId, message=The AWS Access Key Id you provided does not exist in our records.
-Extension reached S3 API call with UE_MAX_OUTPUT_RECORDS=50 set in environment.
+2026-10-09 12:23:10,697 - utility.py[208] ERROR: S3 ClientError: code=InvalidAccessKeyId, message=The AWS Access Key Id you provided does not exist in our records.
+2026-10-09 12:23:10,698 - extension.py[90] ERROR: Execution error: S3 error: The AWS Access Key Id you provided does not exist in our records.
 
 ### Extension Output:
-{"exit_code": 1, "status_description": "S3 error: The AWS Access Key Id you provided does not exist in our records.", "errors": [{"type": "S3ServiceError"}]}
-
-**Note**: Failure is due to placeholder AWS credentials. Environment variable UE_MAX_OUTPUT_RECORDS=50 was passed successfully.
+{
+  "exit_code": 1,
+  "status_description": "S3 error: The AWS Access Key Id you provided does not exist in our records.",
+  "errors": [{"type": "S3ServiceError", "message": "S3 error: The AWS Access Key Id you provided does not exist in our records.", "exit_code": 1}]
+}

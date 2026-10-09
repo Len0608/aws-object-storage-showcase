@@ -1,47 +1,48 @@
 # Test Issues Summary
 
-All 10 tasks failed. Two distinct failure categories observed:
+**Run Date**: 2026-10-09
+**Extension**: aws-object-storage-showcase v1.0.0
+**Agent**: sb-agent-ubu - AGNT0012
+**Template**: Aws Object Storage Showcase
 
 ---
 
-## Category 1: Invalid AWS Credentials (6 tasks)
+## Upload File Tests (4 tasks) — All ✗ Failed
 
-**Root cause**: The `aws-s3-test-creds` credential contains placeholder values (`test-placeholder-key`). AWS rejected the access key with `InvalidAccessKeyId`.
+**Root Cause**: Source file `/home/uac-agent/ue-test-inputs/upload_test.txt` does not exist on the remote agent host.
 
-**Affected tasks**:
-- Test_AwsObjectStorage_ListObjects_IAM_Minimal
-- Test_AwsObjectStorage_ListObjects_IAM_Full
-- Test_AwsObjectStorage_ListObjects_IAM_MaxRecords50
-- Test_AwsObjectStorage_ListObjects_IAM_MaxRecordsSmall
-- Test_AwsObjectStorage_ListObjects_IAM_AfterUpload
-- Test_AwsObjectStorage_ListObjects_IAM_AfterNestedUpload
+| Task | Error Type | Error Message |
+|------|-----------|---------------|
+| Test_AwsObjectStorage_UploadFile_IAM_Minimal | LocalFileNotFoundError | Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt |
+| Test_AwsObjectStorage_UploadFile_IAM_NestedKey | LocalFileNotFoundError | Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt |
+| Test_AwsObjectStorage_UploadFile_IAM_Overwrite | LocalFileNotFoundError | Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt |
+| Test_AwsObjectStorage_UploadFile_IAM_RootLevelKey | LocalFileNotFoundError | Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt |
 
-**Error**: `S3 error: The AWS Access Key Id you provided does not exist in our records.`
-
-**Extension behavior**: Correct — extension loaded, dispatched to List Objects action, created S3 client, and reached the API call before failing with a clear S3 service error.
+**Note**: Extension successfully started, dispatched to Upload File action, validated inputs, and checked for the local file before failing. Extension flow and error handling are correct.
 
 ---
 
-## Category 2: Missing Local File on Agent Host (4 tasks)
+## List Objects Tests (6 tasks) — All ✗ Failed
 
-**Root cause**: The local test file `/home/uac-agent/ue-test-inputs/upload_test.txt` does not exist on the remote agent host `sb-agent-ubu - AGNT0012`.
+**Root Cause**: AWS credential `aws-s3-test-creds` uses placeholder value `test-placeholder-key` which is not a valid AWS Access Key ID. All list operations reach the AWS API before failing with `InvalidAccessKeyId`.
 
-**Affected tasks**:
-- Test_AwsObjectStorage_UploadFile_IAM_Minimal
-- Test_AwsObjectStorage_UploadFile_IAM_NestedKey
-- Test_AwsObjectStorage_UploadFile_IAM_Overwrite
-- Test_AwsObjectStorage_UploadFile_IAM_RootLevelKey
+| Task | Error Type | Error Message |
+|------|-----------|---------------|
+| Test_AwsObjectStorage_ListObjects_IAM_Minimal | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
+| Test_AwsObjectStorage_ListObjects_IAM_Full | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
+| Test_AwsObjectStorage_ListObjects_IAM_MaxRecords50 | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
+| Test_AwsObjectStorage_ListObjects_IAM_MaxRecordsSmall | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
+| Test_AwsObjectStorage_ListObjects_IAM_AfterUpload | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
+| Test_AwsObjectStorage_ListObjects_IAM_AfterNestedUpload | S3ServiceError | S3 error: The AWS Access Key Id you provided does not exist in our records. |
 
-**Error**: `Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt`
-
-**Extension behavior**: Correct — extension loaded, dispatched to Upload File action, validated input fields, checked for local file existence, and returned a clear error with `LocalFileNotFoundError` type.
+**Note**: Extension successfully started, dispatched to List Objects action, validated inputs, and created a boto3 S3 client before failing at the AWS API call. The boto3 S3 client creation (`utility.py`) worked correctly. The `extensionStatus` field was correctly set to "Listing objects" in all instances.
 
 ---
 
-## Positive Observations
+## Summary
 
-- The extension loaded and initialized correctly on all 10 runs (v1.0.0)
-- Action dispatch worked correctly for both `List Objects` and `Upload File`
-- Input field validation executed before S3 API calls (List Objects) and before file checks (Upload File)
-- Error types and messages were structured and informative in all extension outputs
-- Exit code 1 was returned consistently on failures
+All 10 tests failed as expected due to missing test environment prerequisites:
+1. **Upload tests**: Test input file not present on agent host
+2. **List tests**: Placeholder AWS credentials (not real IAM keys)
+
+These are known infrastructure/credential failures, not extension code defects.

@@ -3,15 +3,18 @@
 **Status**: ✗ Failed
 
 ### Expected:
-Upload local file to root-level S3 key `upload_root.txt` in bucket `ue-test-aws-object-storage-2026`.
+File uploaded to S3 bucket "ue-test-aws-object-storage-2026" at root-level key "upload_root.txt".
 
 ### STDOUT:
 [empty]
 
 ### STDERR:
-upload_file.py ERROR: Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt
+2026-10-09 12:21:23,895 - upload_file.py[80] ERROR: Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt
+2026-10-09 12:21:23,895 - extension.py[90] ERROR: Execution error: Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt
 
 ### Extension Output:
-{"exit_code": 1, "status_description": "Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt", "errors": [{"type": "LocalFileNotFoundError"}]}
-
-**Note**: The local file does not exist on the remote agent host. Extension correctly dispatched to Upload File action.
+{
+  "exit_code": 1,
+  "status_description": "Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt",
+  "errors": [{"type": "LocalFileNotFoundError", "message": "Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt", "exit_code": 1}]
+}

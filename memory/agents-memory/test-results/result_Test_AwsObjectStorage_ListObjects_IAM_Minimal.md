@@ -5,15 +5,14 @@
 ### Output:
 ```
 STDERR:
-2026-10-09 12:10:15,446 - extension.py INFO: aws-object-storage-showcase v1.0.0 started
-2026-10-09 12:10:15,446 - extension.py INFO: Action requested: List Objects
-2026-10-09 12:10:15,867 - utility.py ERROR: S3 ClientError: code=InvalidAccessKeyId, message=The AWS Access Key Id you provided does not exist in our records.
-2026-10-09 12:10:15,867 - extension.py ERROR: Execution error: S3 error: The AWS Access Key Id you provided does not exist in our records.
+2026-10-09 12:21:58,926 - utility.py[208] ERROR: S3 ClientError: code=InvalidAccessKeyId, message=The AWS Access Key Id you provided does not exist in our records.
 
 Extension Output:
 {"exit_code": 1, "status_description": "S3 error: The AWS Access Key Id you provided does not exist in our records.", "errors": [{"type": "S3ServiceError"}]}
 ```
 
 ### Notes:
-- Extension reached the S3 API call successfully; failure is due to placeholder AWS credentials (InvalidAccessKeyId)
-- Known failure: no valid AWS credentials provided
+- Extension dispatched correctly to List Objects action
+- S3 client created successfully — boto3 integration is working
+- Failed at AWS API call due to placeholder credential (InvalidAccessKeyId) — expected known failure
+- extensionStatus field set to "Listing objects" confirming correct action execution path

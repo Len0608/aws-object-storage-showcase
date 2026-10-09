@@ -5,11 +5,13 @@
 ### Output:
 ```
 STDERR:
-2026-10-09 12:11:03,019 - utility.py ERROR: S3 ClientError: code=InvalidAccessKeyId
+2026-10-09 12:22:39,649 - utility.py[208] ERROR: S3 ClientError: code=InvalidAccessKeyId, message=The AWS Access Key Id you provided does not exist in our records.
+
 Extension Output:
-{"exit_code": 1, "status_description": "S3 error: The AWS Access Key Id you provided does not exist in our records."}
+{"exit_code": 1, "status_description": "S3 error: The AWS Access Key Id you provided does not exist in our records.", "errors": [{"type": "S3ServiceError"}]}
 ```
 
 ### Notes:
-- Extension executed and reached S3 API; failure due to placeholder credentials (InvalidAccessKeyId)
-- Known failure: no valid AWS credentials provided
+- Extension dispatched correctly to List Objects action
+- S3 client created successfully
+- Failed at AWS API call due to placeholder credential (InvalidAccessKeyId) — expected known failure
