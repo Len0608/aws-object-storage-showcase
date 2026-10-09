@@ -1,54 +1,46 @@
 """ActionOutput dataclass for action return values."""
 
+import json
 from dataclasses import dataclass
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class ActionOutput:
     """Output from action functions.
 
-    Define fields based on your extension's output needs.
-    Control fields (stdout_options, output_options) are populated from InputFields.
+    Fields:
+        result: Structured result dict for the Extension Output JSON.
+                For List Objects: {"bucket": ..., "count": ..., "truncated": ..., "objects": [...]}
+                For Upload File: {"bucket": ..., "key": ..., "local_file": ...}
+        status_description: Human-readable summary used as the task status description.
+        exit_code: Extension exit code (0 = success, 1 = operational error, 20 = validation error).
     """
 
-    # Define your output fields here
-    # Example fields:
-    # resource_id: Optional[str] = None
-    # resource_name: Optional[str] = None
-    # details: Optional[Dict[str, Any]] = None
-    # items: Optional[List[Dict[str, Any]]] = None
-    # metadata: Optional[Dict[str, Any]] = None
+    result: Optional[Dict[str, Any]] = None
+    status_description: Optional[str] = None
+    exit_code: int = 0
 
-    # Control fields (from template Choice fields)
-    stdout_options: List[str] = None
-    output_options: List[str] = None
+    def print_output(self) -> None:
+        """Print to STDOUT.
 
-    def __post_init__(self):
-        """Initialize control fields with defaults."""
-        if self.stdout_options is None:
-            self.stdout_options = []
-        if self.output_options is None:
-            self.output_options = []
-
-    def print_output(self):
-        """Print to STDOUT based on stdout_options.
-
-        Implement printing logic based on user selections.
-        Empty list = print everything (if no control fields in template)
+        The actions in this extension write STDOUT directly during execution
+        (tabulate table for List Objects, confirmation line for Upload File).
+        This method is a no-op because no deferred STDOUT control fields exist
+        in the template.
         """
-        # Implement based on your fields
-        pass
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dict for Extension Output (unv_output).
 
-        Returns dict based on output_options selections.
-        Empty list = include everything (if no control fields in template)
+        Returns a dict with a single ``result`` key containing the structured
+        result data. No output_options control field exists in the template,
+        so all result data is always included.
+
+        Returns:
+            Dict containing the ``result`` key (omitted when result is None).
         """
-        include_all = len(self.output_options) == 0
-        output = {}
-
-        # Implement based on your fields
-
+        output: Dict[str, Any] = {}
+        if self.result is not None:
+            output["result"] = self.result
         return output
