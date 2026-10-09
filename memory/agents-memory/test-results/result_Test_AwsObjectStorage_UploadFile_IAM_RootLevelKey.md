@@ -4,13 +4,10 @@
 
 ### Output:
 ```
-STDERR:
-2026-10-09 12:21:23,895 - upload_file.py[80] ERROR: Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt
-
-Extension Output:
-{"exit_code": 1, "status_description": "Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt"}
+STDERR: upload_file.py ERROR: Local file not found: /home/uac-agent/ue-test-inputs/upload_test.txt
+EXTENSION: exit_code=1, errors: [LocalFileNotFoundError]
 ```
 
 ### Notes:
-- Extension dispatched correctly to Upload File action
-- Same root cause as all Upload File tests — source file absent on remote agent
+- Known failure: test input file /home/uac-agent/ue-test-inputs/upload_test.txt does not exist on the remote agent host
+- Extension loaded correctly; root-level S3 key (upload_root.txt) was configured correctly; file existence check executed; error propagated correctly
