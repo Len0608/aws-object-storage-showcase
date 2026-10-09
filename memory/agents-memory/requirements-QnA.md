@@ -77,7 +77,7 @@ These 4 questions address the critical open decisions in the requirements: Pytho
 - **Rationale**: tabulate produces a visually clean `rounded_outline` table in a single function call with no complexity cost; important for a demo integration where output impression matters
 - **Trade-offs**: O1 adds one more entry in `requirements.txt` but produces a much more readable STDOUT; O2 is marginally simpler but produces plain-text output that is harder to read in a demo context
 - **Requirement Impact**: None
-- **User's Answer**: O1
+- **User's Answer**: O1 — Include `tabulate` for table-formatted STDOUT. A well-formatted table of S3 objects significantly improves the demo impact and adds only ~1 line of code per column definition.
 
 ---
 
@@ -109,7 +109,7 @@ The recommended mapping follows UAC's convention that `user` holds a non-sensiti
 - **Rationale**: The `token` attribute is natively available on UAC credentials; using it costs nothing and enables the extension to work in IAM Role / STS-based environments without future modification
 - **Trade-offs**: O2 is slightly simpler to document (two attributes vs. three) but would require rework later for organizations using role-based AWS authentication; O1 future-proofs the credential design at no implementation cost
 - **Requirement Impact**: None — the credential field is already specified in requirements; this only defines which UAC credential attribute holds which AWS value
-- **User's Answer**: O1
+- **User's Answer**: O1 — Map `user`=Access Key ID, `password`=Secret Access Key, `token`=Session Token (optional). Supporting session token via the `token` attribute adds zero extra code (boto3 accepts `None` silently) while making the extension compatible with temporary credential workflows common in enterprise AWS.
 
 ---
 
@@ -140,7 +140,7 @@ When truncation occurs, a note should appear in STDOUT and a warning in STDERR i
 - **Rationale**: Key + Size + Last Modified provides a useful and visually appealing snapshot for a demo while keeping the table compact; the cap is essential for safe operation against real-world S3 buckets
 - **Trade-offs**: O1+A adds ~10 lines of cap logic but is safe for any bucket; O2+B is the absolute minimum but risks problems when pointed at a real or growing S3 bucket
 - **Requirement Impact**: None — within MVP scope; the environment variable approach is operator-configurable without code changes
-- **User's Answer**: O1 + A
+- **User's Answer**: O1 + A — Display Key, Size (bytes), and Last Modified in a `rounded_outline` table; cap STDOUT at `UE_MAX_OUTPUT_RECORDS` (default: 100) with truncation notification in STDOUT and STDERR.
 
 ---
 
@@ -171,4 +171,4 @@ For the List Objects action, the number of objects found is highly informative a
 - **Rationale**: Two fields are minimal but give the demo meaningful at-a-glance information in the UAC grid; structured JSON enables downstream workflow integration and makes the MVP useful beyond pure demonstration
 - **Trade-offs**: O1+B is the absolute simplest implementation; O2+A adds modest code for field population but significantly improves both the demo experience and the downstream usability of the extension
 - **Requirement Impact**: None
-- **User's Answer**: O2 + A
+- **User's Answer**: O2 + A — Two output fields (Status + Object Count) with structured per-action Extension Output JSON. The Object Count field provides strong visual impact in the UAC task list for a demo; the structured JSON makes the extension immediately useful for automation workflows.
